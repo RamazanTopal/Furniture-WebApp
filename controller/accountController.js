@@ -9,19 +9,28 @@ exports.getRegister=async (req, res)=>{
         })
 
     }catch(error){
-
+        console.log("getRegister"+error);
     }
 }
 exports.postRegister=async (req, res)=>{
     try{
-        const user= await User.create(req.body)
-        res.render("register",{
-            page_name:"index",
-            user:user
-        })
+        const body = req.body;
+
+        if (!(body.email && body.password)) {
+          return res.status(400).send({ error: "Data not formatted properly" });
+        }
+    
+        // createing a new mongoose doc from user data
+        const user = new User(body);
+        // generate salt to hash password
+        const salt = await bcrypt.genSalt(10);
+        // now we set user password to hashed password
+        user.password = await bcrypt.hash(user.password, salt);
+        user.save().then(() => res.redirect("/user/login"));
+        
 
     }catch(error){
-     
+     console.log("postRegister"+error);
     }
 }
 
@@ -45,18 +54,15 @@ exports.postLogin=async (req, res)=>{
                 bcrypt.compare(password,user.password,(err,same)=>{
                     if(same){
                         req.session.userID=user._id;
+                        req.session.userROLE=user.role;
                         res.redirect("/");
                     }
                 })
             }
         })
-        res.render("login",{
-            page_name:"login",
-            user:user
-        })
 
     }catch(error){
-        console.log("register:"+error)
+     
     }
 }
 //logout

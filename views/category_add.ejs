@@ -3,11 +3,25 @@
       <%-  include("partials/_navigation.ejs") -%>
       <!-- header section end -->
       <!-- contact section start -->
+      
       <div class="contact_section layout_padding">
          <div class="container">
             <div class="row">
                <div class="col-sm-12">
                   <h1 class="contact_taital contact_heading">Category Add</h1>
+               </div>
+               <div class="col-sm-12">
+                  <% if (flashMessages) { %>
+                     <% if (flashMessages.success) { %>
+                       <div class="alert alert-success">
+                     <%= flashMessages.success %>
+                     </div>
+                   <% } else if (flashMessages.error) { %>
+                    <div class="alert alert-danger">
+                     <%= flashMessages.error %>
+                     </div>
+                     <% } %>
+                   <% } %>
                </div>
             </div>
             <div class="contact_section_2">
@@ -35,6 +49,7 @@
             </div>
          </div>
       </div>
+      
       <!-- contact section end -->
       <!-- footer section start -->
       <div class="footer_section layout_padding">

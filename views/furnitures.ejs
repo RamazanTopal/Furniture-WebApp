@@ -3,6 +3,41 @@
       <%-  include("partials/_navigation.ejs") -%>
       <!-- header section end -->
       <!-- furnitures section start -->
+      <% if(!user) {%>
+         <div class="furnitures_section layout_padding">
+            <div class="container">
+               <div class="row">
+                  <div class="col-sm-12">
+                     <h1 class="furnitures_taital">Our Furnitures Work</h1>
+                     <p class="furnitures_text">reader will be distracted by the readable content of a page when looking at its layout. </p>
+                  </div>
+               </div>
+               <div class="furnitures_section_2">
+                  <div class="row">
+                     <% for(let i=0;i<category.length;i++){ %>
+   
+                     <div class="col-md-4">
+                        <div class="hover01 column">
+                           <figure><img src="images/img-1.png"></figure>
+                        </div>
+                        <h3 class="introduction_text"><%=category[i].category_name%></h3>
+                        <div class="seemore_bt"><a href="/blog?categories=<%=category[i].slug%>">See More</a></div>
+                     </div>
+   
+                     <%}%>
+                  </div>
+               </div>
+            </div>
+         </div>
+         <%}%>
+
+
+
+
+
+
+
+      <% if(user && user.role=='customer') {%>
       <div class="furnitures_section layout_padding">
          <div class="container">
             <div class="row">
@@ -28,6 +63,68 @@
             </div>
          </div>
       </div>
+      <%}%>
+      <% if(user && user.role=='admin') {%>
+         <div class="furnitures_section layout_padding">
+            <div class="container">
+               <div class="row">
+                  <div class="col-sm-12">
+                     <h1 class="furnitures_taital">Our Furnitures Work</h1>
+                     <p class="furnitures_text">reader will be distracted by the readable content of a page when looking at its layout. </p>
+                  </div>
+               </div>
+               <div class="furnitures_section_2">
+                  <div class="row">
+                     <% for(let i=0;i<category.length;i++){ %>
+   
+                     <div class="col-md-4">
+                        <div class="hover01 column">
+                           <figure><img src="images/img-1.png"></figure>
+                        </div>
+                        <h3 class="introduction_text"><%=category[i].category_name%></h3>
+                        <button type="button" class="btn btn-warning text-white" data-toggle="modal" data-target="#exampleModal<%=category[i].slug%>" data-whatever="@getbootstrap">UPDATE</button>
+                        <a href="/admin/<%=category[i].slug%>?_method=DELETE" onclick="return confirm('ARE YOU SURE')" class="btn btn-danger text-white " >DELETE</a>
+                     </div>
+                        <!--UPDATE-->
+                        <div class="modal fade" id="exampleModal<%=category[i].slug%>" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                           <div class="modal-dialog" role="document">
+                           <div class="modal-content">
+
+                              <div class="modal-header">
+                                 <h5 class="modal-title" id="exampleModalLabel">PRODUCT</h5>
+                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                 <span aria-hidden="true">&times;</span>
+                                 </button>
+                              </div>
+
+                              <div class="modal-body">
+                                 <form method="POST" action="/admin/<%=category[i].slug%>?_method=PUT">
+                                    <div class="form-group">
+                                       <input name="category_name" type="text" class="form-control" style="color: black;" value="<%=category[i].category_name%>" >
+                                    </div>
+                                    <hr>
+                                    <div class="form-group">
+                                       <input name="category_description" type="text" class="form-control"  style="color: black;" value="<%=category[i].category_description%>">
+                                    </div>
+                                    <hr>
+                                    <hr>
+                                    <div class="form-group" style="display: block;">
+                                       <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                       <button class="btn btn-primary" type="submit">Update</button>
+                                    </div>
+                                 </form>
+                              </div>
+
+                           </div>
+                           </div>
+                        </div>
+                        <!--UPDATE finish-->
+                     <%}%>
+                  </div>
+               </div>
+            </div>
+         </div>
+         <%}%>
       <!-- furnitures section end -->
       <!-- footer section start -->
       <div class="footer_section layout_padding margin_top90">

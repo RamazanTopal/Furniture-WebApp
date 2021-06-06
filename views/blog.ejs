@@ -1,13 +1,72 @@
 <%-  include("partials/_header.ejs") -%>
    <body>
       <%-  include("partials/_navigation.ejs") -%>
-      <!-- header section end -->
       <!-- blog section start -->
+      <% if(!user) {%>
+         <div class="blog_section layout_padding">
+            <div class="container">
+               <div class="row">
+                  <div class="col-md-12">
+                     <h1 class="blog_taital">Trending Products</h1>
+                  </div>
+                  <div class="offset-md-4  col-md-3">
+                     <form action="/blog" method="GET">
+                        <div class="input-group" >
+                           <input type="search" name="search" class="form-control rounded"  placeholder="Search" aria-label="Search"
+                             aria-describedby="search-addon" style="border-color: black;color:black" />
+                           <button type="submit" class="btn btn-outline-primary">search</button>
+                         </div>
+                     </form>
+                  </div>
+               </div>
+            </div>
+            <div class="container">
+               <div class="blog_section_2 layout_padding">
+                  <div class="row">
+                     <%for(let i=0;i<product.length;i++){%>
+                     <div class="col-lg-4 col-md-4 col-sm-12">
+                        <div class="blog_box">
+                           <div class="blog_img">
+                              <a href="product/detail/<%=product[i].slug%>"><img src="/images/about-img.png"></a>
+                           </div>
+                           <p class="chair_text"><%=product[i].product_name%></p>
+                           <% if ( user && !(user.products.includes(product[i]._id))  ) { %>
+                           <form action="/product/reserved" method="POST">
+                              <input type="hidden" name="product_id" value="<%=product[i]._id%>">
+                              <button class="btn btn-warning text-white ml-auto"><span>Reserved</span></button>
+                           </form>
+                           <% } %>
+                        </div>
+                     </div>
+                     <%}%>
+                  </div>
+               </div>
+               <div class="readmore_bt"><a href="#">See More</a></div>
+            </div>
+         </div>
+         <% } %>
+
+
+
+
+
+
+
+      <% if(user && user.role=='customer') {%>
       <div class="blog_section layout_padding">
          <div class="container">
             <div class="row">
                <div class="col-md-12">
                   <h1 class="blog_taital">Trending Products</h1>
+               </div>
+               <div class="offset-md-4  col-md-3">
+                  <form action="/blog" method="GET">
+                     <div class="input-group" >
+                        <input type="search" name="search" class="form-control rounded"  placeholder="Search" aria-label="Search"
+                          aria-describedby="search-addon" style="border-color: black;color:black" />
+                        <button type="submit" class="btn btn-outline-primary">search</button>
+                      </div>
+                  </form>
                </div>
             </div>
          </div>
@@ -18,9 +77,15 @@
                   <div class="col-lg-4 col-md-4 col-sm-12">
                      <div class="blog_box">
                         <div class="blog_img">
-                           <a href="product/<%=product[i].slug%>"><img src="/images/about-img.png"></a>
+                           <a href="product/detail/<%=product[i].slug%>"><img src="/images/about-img.png"></a>
                         </div>
                         <p class="chair_text"><%=product[i].product_name%></p>
+                        <% if ( user && !(user.products.includes(product[i]._id))  ) { %>
+                        <form action="/product/reserved" method="POST">
+                           <input type="hidden" name="product_id" value="<%=product[i]._id%>">
+                           <button class="btn btn-warning text-white ml-auto"><span>Reserved</span></button>
+                        </form>
+                        <% } %>
                      </div>
                   </div>
                   <%}%>
@@ -29,18 +94,117 @@
             <div class="readmore_bt"><a href="#">See More</a></div>
          </div>
       </div>
+      <% } %>
+
+
+      <% if(user && user.role=='admin') {%>
+         <div class="blog_section layout_padding">
+            <div class="container">
+               <div class="row">
+                  <div class="col-md-12">
+                     <h1 class="blog_taital">Trending Products</h1>
+                  </div>
+                  <div class="col-md-12">
+                     <% if (flashMessages) { %>
+                        <% if (flashMessages.success) { %>
+                          <div class="alert alert-success">
+                        <%= flashMessages.success %>
+                        </div>
+                      <% } else if (flashMessages.error) { %>
+                       <div class="alert alert-danger">
+                        <%= flashMessages.error %>
+                        </div>
+                        <% } %>
+                      <% } %>
+                  </div>
+                  <div class="offset-md-4  col-md-3">
+                     <form action="/blog" method="GET">
+                        <div class="input-group" >
+                           <input type="search" name="search" class="form-control rounded"  placeholder="Search" aria-label="Search"
+                             aria-describedby="search-addon" style="border-color: black;color:black" />
+                           <button type="submit" class="btn btn-outline-primary">search</button>
+                         </div>
+                     </form>
+                  </div>
+               </div>
+            </div>
+            <div class="container">
+               <div class="blog_section_2 layout_padding">
+                  <div class="row">
+                     <%for(let i=0;i<product.length;i++){%>
+                     <div class="col-lg-4 col-md-4 col-sm-12">
+                        <div class="blog_box">
+                           <div class="blog_img">
+                              <a href="product/detail/<%=product[i].slug%>"><img src="/images/about-img.png"></a>
+                           </div>
+                           <p class="chair_text"><%=product[i].product_name%></p>
+                           <div style="display: flex; justify-content:space-between">
+                           <button type="button" class="btn btn-warning text-white" data-toggle="modal" data-target="#exampleModal<%=product[i].slug%>" data-whatever="@getbootstrap">UPDATE</button>
+                           <a href="/product/<%=product[i].slug%>?_method=DELETE" onclick="return confirm('ARE YOU SURE')" class="btn btn-danger text-white " >DELETE</a>
+                           </div>
+                           <!--UPDATE-->
+                           <div class="modal fade" id="exampleModal<%=product[i].slug%>" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                              <div class="modal-dialog" role="document">
+                              <div class="modal-content">
+
+                                 <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">PRODUCT</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                    </button>
+                                 </div>
+
+                                 <div class="modal-body">
+                                    <form method="POST" action="/product/<%=product[i].slug%>?_method=PUT">
+                                       <div class="form-group">
+                                          <input name="product_name" type="text" class="form-control" style="color: black;" value="<%=product[i].product_name%>" >
+                                       </div>
+                                       <hr>
+                                       <div class="form-group">
+                                          <input name="product_description" type="text" class="form-control"  style="color: black;" value="<%=product[i].product_description%>">
+                                       </div>
+                                       <div class="form-group">
+                                          <input name="role" type="hidden" class="form-control"  style="color: black;" value="<%=product[i].role%>">
+                                       </div>
+                                       <hr>
+                                       <select name="category" class="form-select" aria-label="Default select example" >
+                                          <%for(let j=0;j<category1.length;j++){%>
+                                             <option value="<%=category1[j]._id%>"><%=category1[j].category_name%></option>
+                                          <%}%>
+                                       </select>
+                                       <hr>
+                                       <div class="form-group" style="display: block;">
+                                          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                          <button class="btn btn-primary" type="submit">Update</button>
+                                       </div>
+                                    </form>
+                                 </div>
+
+                              </div>
+                              </div>
+                           </div>
+                           <!--UPDATE finish-->
+                        </div>
+                     </div>
+                     <%}%>
+                  </div>
+               </div>
+               <div class="readmore_bt"><a href="#">See More</a></div>
+            </div>
+         </div>
+         <% } %>
+    
       <!-- blog section end -->
       <!-- footer section start -->
       <div class="footer_section layout_padding margin_top90">
          <div class="container">
             <div class="footer_menu">
                <ul>
-                  <li><a href="index.html">HOME</a></li>
-                  <li><a href="about.html">About</a></li>
-                  <li><a href="furnitures.html">Furnitures</a></li>
-                  <li class="active"><a href="blog.html">Blog</a></li>
-                  <li><a href="testimonial.html">Testimonial</a></li>
-                  <li><a href="contact.html">contact Us</a></li>
+                  <li><a href="/">HOME</a></li>
+                  <li><a href="/about">About</a></li>
+                  <li><a href="/furnitures">Furnitures</a></li>
+                  <li><a href="/blog">Blog</a></li>
+                  <li><a href="/contact">contact Us</a></li>
                </ul>
             </div>
             <div class="social_icon">

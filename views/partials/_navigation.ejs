@@ -40,8 +40,13 @@
              <li class="<%= page_name == 'furnitures' && 'active' %> "><a href="/furnitures">Furnitures</a></li>
              <li class="<%= page_name == 'blog' && 'active' %> "><a href="/blog">Blog</a></li>
              <% if(userIN){%>
-             <li class="<%= page_name == 'blog' && 'active' %> "><a href="/admin/productadd">Product Add</a></li>
-             <li class="<%= page_name == 'blog' && 'active' %> "><a href="/admin/categoryAdd">Category Add</a></li>
+               <% if(userROLE=='admin'){%>
+             <li class="<%= page_name == 'productadd' && 'active' %> "><a href="/admin/productadd">Product Add</a></li>
+             <li class="<%= page_name == 'categoryAdd' && 'active' %> "><a href="/admin/categoryAdd">Category Add</a></li>
+               <% }%>
+               <% if(userROLE=='customer'){%>
+                  <li class="<%= page_name == 'productadd' && 'active' %> "><a href="/product/reserved">Product Reserve</a></li>
+                    <% }%>
              <% }%>
              <li class="<%= page_name == 'contact' && 'active' %> "><a href="/contact">Contact Us</a></li>
              <% if(!userIN){%>
@@ -50,8 +55,7 @@
              <% }%>
              <% if(userIN){%>
                <li class="<%= page_name == 'login' && 'active' %> "><a href="/user/logout">Logout</a></li>
-               <% }%>
-             <li><a href="#"><i class="fa fa-search" aria-hidden="true"></i></a></li>
+            <% }%>
           </ul>
        </div>
     </div>

@@ -9,6 +9,19 @@
                <div class="col-sm-12">
                   <h1 class="contact_taital contact_heading">Product Add</h1>
                </div>
+               <div class="col-sm-12">
+                  <% if (flashMessages) { %>
+                     <% if (flashMessages.success) { %>
+                       <div class="alert alert-success">
+                     <%= flashMessages.success %>
+                     </div>
+                   <% } else if (flashMessages.error) { %>
+                    <div class="alert alert-danger">
+                     <%= flashMessages.error %>
+                     </div>
+                     <% } %>
+                   <% } %>
+               </div>
             </div>
             <div class="contact_section_2">
                <div class="row">
@@ -20,6 +33,11 @@
                            <div class="form-group">
                               <input type="file" class="form-control-file" name="image">
                            </div>
+                           <select class="form-select mail_text" name="category">
+                              <% for(let i=0; i<category.length;i++){ %>
+                              <option value="<%=category[i]._id%>"><%=category[i].category_name%></option>
+                              <%}%>
+                            </select>
                            <div class="btn_main float-right">
                               <div class="send_bt"><button class="btn btn-primary float-right" type="submit">Kaydet</button> </div>
                            </div>
